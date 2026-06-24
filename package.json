@@ -1,0 +1,85 @@
+{
+  "name": "cc-fluidity",
+  "displayName": "CC-Fluidity",
+  "description": "Fluid-physics test tubes showing your Claude Code 5-hour and 7-day usage in real time.",
+  "version": "0.0.1",
+  "publisher": "Seedlign",
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/Seedlign/cc-fluidity.git" },
+  "bugs": { "url": "https://github.com/Seedlign/cc-fluidity/issues" },
+  "homepage": "https://github.com/Seedlign/cc-fluidity#readme",
+  "keywords": ["claude", "claude-code", "anthropic", "usage", "monitor"],
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "claudeUsage",
+          "title": "CC-Fluidity",
+          "icon": "media/beaker.svg"
+        }
+      ]
+    },
+    "views": {
+      "claudeUsage": [
+        {
+          "type": "webview",
+          "id": "claudeUsage.fluid",
+          "name": "CC-Fluidity"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "claudeUsage.openPanel",
+        "title": "Open as Window",
+        "category": "CC-Fluidity",
+        "icon": "$(link-external)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "claudeUsage.openPanel",
+          "when": "view == claudeUsage.fluid",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "CC-Fluidity",
+      "properties": {
+        "claudeUsage.projectsDir": {
+          "type": "string",
+          "default": "",
+          "description": "Override path to ~/.claude/projects (leave empty to autodetect)."
+        },
+        "claudeUsage.dailyBudgetUsd": {
+          "type": "number",
+          "default": 5.0,
+          "description": "Full-tube reference cost for the D (daily) tube."
+        },
+        "claudeUsage.weeklyBudgetUsd": {
+          "type": "number",
+          "default": 50.0,
+          "description": "Full-tube reference cost for the W (weekly) tube."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p .",
+    "watch": "tsc -w -p ."
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0"
+  }
+}

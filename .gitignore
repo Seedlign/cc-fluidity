@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output (compiled fresh by `npm run compile` / at package time)
+out/
+
+# Packaged extension
+*.vsix
+
+# Dev/preview artifacts (generated locally; not source)
+preview.html
+.preview-vendor/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+
+# Claude context files (never publish)
+CLAUDE.md
+claude.md
+.claude/
+AGENTS.md
+
+# Design archive (kept local, not published)
+design-fluid/
+design/
