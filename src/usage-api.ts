@@ -43,6 +43,45 @@ function getCacheFilePath(): string {
   return path.join(os.tmpdir(), 'claude-usage-cache.json');
 }
 
+export interface AccountInfo {
+  displayName: string | null;
+  email: string | null;
+}
+
+let accountCache: { value: AccountInfo | null; at: number } | null = null;
+const ACCOUNT_TTL_MS = 300_000;
+
+// Read which Claude account is logged in. Claude Code writes this to
+// ~/.claude.json under `oauthAccount`; `displayName` is the human name
+// ("Ric"), `emailAddress` is the login email. Both are best-effort — if the
+// file or fields are missing we return nulls and the view just omits the line.
+// Cached for a few minutes since ~/.claude.json can be large and the logged-in
+// account effectively never changes mid-session.
+export function readAccount(): AccountInfo | null {
+  if (accountCache && Date.now() - accountCache.at < ACCOUNT_TTL_MS) {
+    return accountCache.value;
+  }
+  const value = loadAccount();
+  accountCache = { value, at: Date.now() };
+  return value;
+}
+
+function loadAccount(): AccountInfo | null {
+  try {
+    const cfgPath = path.join(os.homedir(), '.claude.json');
+    const raw = fs.readFileSync(cfgPath, 'utf8');
+    const parsed = JSON.parse(raw);
+    const acct = parsed?.oauthAccount;
+    if (!acct) return null;
+    const displayName = typeof acct.displayName === 'string' ? acct.displayName : null;
+    const email = typeof acct.emailAddress === 'string' ? acct.emailAddress : null;
+    if (!displayName && !email) return null;
+    return { displayName, email };
+  } catch {
+    return null;
+  }
+}
+
 function readCredentials(): { accessToken: string; expiresAt: number | null } | null {
   try {
     const credPath = path.join(getClaudeConfigDir(), '.credentials.json');

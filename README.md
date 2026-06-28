@@ -24,6 +24,16 @@ Read this before installing — the extension touches local Claude Code files an
 
 **It makes one network call:** `GET https://api.anthropic.com/api/oauth/usage`, authorized with your token. This is an **internal, undocumented, unsupported** endpoint used by Claude Code itself and **may change or break without notice**; if it does, the extension falls back to local mode.
 
+### When you get *real* numbers vs. estimates
+
+The preferred **api** mode (real rate-limit utilization %) only works when an OAuth access token is present in `~/.claude/.credentials.json`. That means:
+
+- ✅ **Windows / Linux, logged into Claude Code with a Claude.ai (Pro/Max) account** — works automatically, zero config.
+- ⚠️ **macOS** — Claude Code stores its OAuth token in the **macOS Keychain**, *not* in `.credentials.json`, so the extension can't read it. It silently falls back to **local** mode (estimates against the budgets below).
+- ⚠️ **API-key / Console billing** (no Claude.ai OAuth login) — no token to read, so **local** mode only.
+
+In the fallback cases nothing errors — the tubes just show rough local estimates rather than your true rate-limit percentages.
+
 **It does not** send your data to third parties, run analytics/telemetry, open any other network connection, or modify your Claude Code configuration or login. If you're not comfortable with this, don't install it.
 
 ## Tech stack & dependencies
@@ -35,7 +45,19 @@ Read this before installing — the extension touches local Claude Code files an
 
 ## Installation
 
-Run from source (Extension Development Host):
+### Option A — install the prebuilt `.vsix` (recommended)
+
+1. Download `cc-fluidity-<version>.vsix` from the [latest release](https://github.com/Seedlign/cc-fluidity/releases/latest).
+2. Install it:
+   ```powershell
+   code --install-extension cc-fluidity-0.0.1.vsix
+   ```
+   …or in VS Code: **Extensions** panel → **⋯** menu → **Install from VSIX…** → pick the file.
+3. Reload, then click the **beaker** icon in the activity bar.
+
+The `.vsix` is self-contained (the runtime dependency is bundled), so no `npm install` is needed.
+
+### Option B — run from source (for development)
 
 ```powershell
 git clone https://github.com/Seedlign/cc-fluidity.git
@@ -47,7 +69,7 @@ npm run compile
 
 In the dev-host window, click the **beaker** icon in the activity bar. The tubes appear and update as you use Claude Code. Use **"CC-Fluidity: Open as Window"** (or the ⧉ button in the view header) to pop it out.
 
-> A prebuilt installable `.vsix` is not published yet (it requires bundling the runtime dependency). Running from source works as-is.
+> Note: a `git clone` alone does **not** install the extension into your editor — use Option A's `.vsix` for a real install, or press F5 in Option B for a temporary Extension Development Host window.
 
 ## Configuration
 

@@ -5,13 +5,30 @@
   "version": "0.0.1",
   "publisher": "Seedlign",
   "license": "MIT",
-  "repository": { "type": "git", "url": "https://github.com/Seedlign/cc-fluidity.git" },
-  "bugs": { "url": "https://github.com/Seedlign/cc-fluidity/issues" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Seedlign/cc-fluidity.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Seedlign/cc-fluidity/issues"
+  },
   "homepage": "https://github.com/Seedlign/cc-fluidity#readme",
-  "keywords": ["claude", "claude-code", "anthropic", "usage", "monitor"],
-  "engines": { "vscode": "^1.85.0" },
-  "categories": ["Other"],
-  "activationEvents": ["onStartupFinished"],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "anthropic",
+    "usage",
+    "monitor"
+  ],
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "viewsContainers": {
@@ -59,12 +76,12 @@
         },
         "claudeUsage.dailyBudgetUsd": {
           "type": "number",
-          "default": 5.0,
+          "default": 5,
           "description": "Full-tube reference cost for the D (daily) tube."
         },
         "claudeUsage.weeklyBudgetUsd": {
           "type": "number",
-          "default": 50.0,
+          "default": 50,
           "description": "Full-tube reference cost for the W (weekly) tube."
         }
       }
@@ -72,11 +89,15 @@
   },
   "scripts": {
     "compile": "tsc -p .",
-    "watch": "tsc -w -p ."
+    "watch": "tsc -w -p .",
+    "bundle": "esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --external:fsevents --format=cjs --platform=node --target=node18 --minify",
+    "vscode:prepublish": "npm run bundle"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.9.2",
+    "esbuild": "^0.28.1",
     "typescript": "^5.4.0"
   },
   "dependencies": {

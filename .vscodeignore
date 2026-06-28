@@ -1,6 +1,23 @@
-.vscode/**
+# Source & build config (the bundle in out/extension.js is what ships)
 src/**
-node_modules/**
 tsconfig.json
-**/*.ts.map
+**/*.map
+node_modules/**
+
+# Dev/preview tooling & artifacts
+.vscode/**
+.preview-vendor/**
+preview.html
+monitor.js
+generate-preview.js
+
+# Local-only design archive
+design-fluid/**
+design/**
+
+# Repo meta not needed in the package
 .gitignore
+.git/**
+package-lock.json
+HOW_IT_WORKS.md
+DESIGN_PROMPT.md

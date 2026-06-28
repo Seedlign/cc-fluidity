@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { UsageTracker } from './usageTracker';
+import { readAccount } from './usage-api';
 
 // The model line in the webview is clickable. We can't switch Claude Code's active
 // model from here (this is a read-only monitor), so be honest about it.
@@ -30,12 +31,18 @@ export function postSnapshot(webview: vscode.Webview, tracker: UsageTracker) {
     if (tok > best) { best = tok; model = m; }
   }
   const primary = model ? bbm[model] : null;
+
+  // Whose account is logged in. Prefer the human name, fall back to the email.
+  const acct = readAccount();
+  const account = acct ? (acct.displayName || acct.email) : null;
+
   const detail = {
     model,
     extraModels: Math.max(0, modelNames.length - 1),
     models: modelNames,
     blockTokens: primary ? tokensOf(primary) : 0,
     blockCost: primary ? primary.cost : 0,
+    account,
   };
 
   if (api?.five_hour || api?.seven_day) {
@@ -439,7 +446,7 @@ function useCountdown(isoStr, intervalMs) {
 }
 
 function App() {
-  const [data, setData] = useState({ mode: 'local', sessionPct: 0, weeklyPct: 0, sessionResetsAt: null, weeklyResetsAt: null, omelettePct: null, omelletteResetsAt: null, model: null, extraModels: 0, models: [], blockTokens: 0, blockCost: 0 });
+  const [data, setData] = useState({ mode: 'local', sessionPct: 0, weeklyPct: 0, sessionResetsAt: null, weeklyResetsAt: null, omelettePct: null, omelletteResetsAt: null, model: null, extraModels: 0, models: [], blockTokens: 0, blockCost: 0, account: null });
   useEffect(() => {
     const onMsg = e => { if (e.data?.type === 'snapshot') setData(e.data); };
     window.addEventListener('message', onMsg);
@@ -605,7 +612,8 @@ function App() {
     h('div', { style: { display:'flex', flexDirection:'column', alignItems:'center', gap: colGap } },
       !compact && h('div', { style: { font:'600 ' + chromeFont + 'px/1 var(--mono)', color:'var(--text-sub)', letterSpacing:'0.22em', textTransform:'uppercase' } }, 'CC-Fluidity'),
       tubes,
-      !compact && h('div', { style: { font:'400 ' + chromeFont + 'px/1.4 var(--mono)', color:'var(--text-sub)', letterSpacing:'0.04em', textAlign:'center', maxWidth:260 } }, sourceText)
+      !compact && h('div', { style: { font:'400 ' + chromeFont + 'px/1.4 var(--mono)', color:'var(--text-sub)', letterSpacing:'0.04em', textAlign:'center', maxWidth:260 } }, sourceText),
+      !compact && data.account && h('div', { style: { font:'400 ' + chromeFont + 'px/1.4 var(--mono)', color:'var(--text-sub)', letterSpacing:'0.04em', textAlign:'center', maxWidth:260, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' } }, 'account · ' + data.account)
     ),
     tip
   );
