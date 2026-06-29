@@ -14,7 +14,7 @@ CC-Fluidity is a small, read-only VS Code view that shows your **Claude Code** u
 - **Detail on demand** — hover a tube for its exact %, reset countdown, and (in the big view) the active model, tokens, and approximate cost for the current block. With multiple models in use, it shows the primary model plus a `+N` count.
 - **Dockable or floating** — live in the sidebar/panel, or pop it out into its own movable, resizable window ("CC-Fluidity: Open as Window").
 
-## ⚠️ Data access & privacy
+## Data access & privacy
 
 Read this before installing — the extension touches local Claude Code files and calls an undocumented endpoint.
 
@@ -28,9 +28,9 @@ Read this before installing — the extension touches local Claude Code files an
 
 The preferred **api** mode (real rate-limit utilization %) only works when an OAuth access token is present in `~/.claude/.credentials.json`. That means:
 
-- ✅ **Windows / Linux, logged into Claude Code with a Claude.ai (Pro/Max) account** — works automatically, zero config.
-- ⚠️ **macOS** — Claude Code stores its OAuth token in the **macOS Keychain**, *not* in `.credentials.json`, so the extension can't read it. It silently falls back to **local** mode (estimates against the budgets below).
-- ⚠️ **API-key / Console billing** (no Claude.ai OAuth login) — no token to read, so **local** mode only.
+- **Windows / Linux, logged into Claude Code with a Claude.ai (Pro/Max) account** — works automatically, zero config.
+- **macOS** — Claude Code stores its OAuth token in the **macOS Keychain**, *not* in `.credentials.json`, so the extension can't read it. It silently falls back to **local** mode (estimates against the budgets below).
+- **API-key / Console billing** (no Claude.ai OAuth login) — no token to read, so **local** mode only.
 
 In the fallback cases nothing errors — the tubes just show rough local estimates rather than your true rate-limit percentages.
 
